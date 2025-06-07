@@ -24,4 +24,5 @@ public class User
 
     @Column(name = "role", nullable = false)
     private String role = "ROLE_USER";
+
 }
