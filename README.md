@@ -4,8 +4,8 @@ A URL shortening service built with Spring Boot that provides user authenticatio
 
 ## 🚀 Technologies Used
 
-- **Java 17+**
-- **Spring Boot 3.x**
+- **Java 17**
+- **Spring Boot 3.5.0**
 - **Spring Security** - JWT-based authentication
 - **Spring Data JPA** - Data persistence layer
 - **Hibernate** - ORM framework
