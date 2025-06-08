@@ -1,4 +1,4 @@
-# Lynk - URL Shortener Backend
+# lynk - URL Shortener Backend
 
 A URL shortening service built with Spring Boot that provides user authentication, URL management, and analytics tracking.
 
