@@ -1,21 +1,28 @@
 package com.lynk.service;
 
+import com.lynk.dtos.ClickEventDTO;
 import com.lynk.dtos.UrlMappingDTO;
+import com.lynk.models.ClickEvent;
 import com.lynk.models.UrlMapping;
 import com.lynk.models.User;
+import com.lynk.repository.ClickEventRepository;
 import com.lynk.repository.UrlMappingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class UrlMappingService
 {
     private UrlMappingRepository urlMappingRepository;
+    private ClickEventRepository clickEventRepository;
 
     public UrlMappingDTO createShortUrl(String originalUrl, User user)
     {
@@ -39,6 +46,22 @@ public class UrlMappingService
                 .toList();
     }
 
+
+    public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end)
+    {
+        UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
+
+        if (urlMapping != null)
+        {
+            return clickEventRepository.findByUrlMappingAndClickDateBetween(urlMapping, start, end).stream()
+                    .collect(Collectors.groupingBy(clickEvent -> clickEvent.getClickDate().toLocalDate(), Collectors.counting()))
+                    .entrySet().stream()
+                    .map(entry -> new ClickEventDTO(entry.getKey(), entry.getValue()))
+                    .toList();
+        }
+
+        return null;
+    }
 
 
 
@@ -69,5 +92,12 @@ public class UrlMappingService
 
         return shortUrl.toString();
     }
-    
+
+    public Map<LocalDate, Long> getTotalClicksByUserAndDate(User user, LocalDate start, LocalDate end)
+    {
+        List<UrlMapping> urlMappings = urlMappingRepository.findByUser(user);
+        List<ClickEvent> clickEvents = clickEventRepository.findByUrlMappingInAndClickDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
+        return clickEvents.stream()
+                .collect(Collectors.groupingBy(clickEvent -> clickEvent.getClickDate().toLocalDate(), Collectors.counting()));
+    }
 }
