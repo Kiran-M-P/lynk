@@ -64,7 +64,7 @@ public class JwtUtils
     {
         return Jwts.parser()
                 .verifyWith((SecretKey) getEncodedKey())
-                .build().parseEncryptedClaims(token)
+                .build().parseSignedClaims(token)
                 .getPayload().getSubject();
     }
 

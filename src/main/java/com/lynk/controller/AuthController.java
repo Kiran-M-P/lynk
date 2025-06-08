@@ -1,5 +1,6 @@
 package com.lynk.controller;
 
+import com.lynk.dtos.LoginRequest;
 import com.lynk.dtos.RegisterRequest;
 import com.lynk.models.User;
 import com.lynk.service.UserService;
@@ -17,6 +18,13 @@ public class AuthController
 {
 
     private UserService userService;
+
+
+    @PostMapping("/public/login")
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest)
+    {
+        return ResponseEntity.ok(userService.authenticateUser(loginRequest));
+    }
 
     @PostMapping("/public/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest)
